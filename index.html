@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aurora · Como votou quem te representa</title>
+  <meta name="description" content="Instale a Aurora na sua IA e pergunte como deputados e senadores votaram. Dados oficiais da Câmara e do Senado, estruturados para Claude, ChatGPT, Gemini e outras.">
+  <meta name="theme-color" content="#FAF8F5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E0F13" media="(prefers-color-scheme: dark)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://auroravoto.com.br/">
+  <meta property="og:title" content="Aurora · Como votou quem te representa">
+  <meta property="og:description" content="Dados oficiais da Câmara e do Senado dentro da sua IA preferida.">
+  <meta property="og:locale" content="pt_BR">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="pular" href="#instalar">Pular para a instalação</a>
+
+  <header class="topo">
+    <div class="container topo__linha">
+      <a class="marca" href="./" aria-label="Aurora, página inicial">
+        <img src="favicon.svg" alt="" width="28" height="28">
+        <span>Aurora</span>
+      </a>
+      <nav class="topo__nav" aria-label="Principal">
+        <a href="#perguntas">Exemplos</a>
+        <a href="#instalar">Instalar</a>
+        <a href="#duvidas">Dúvidas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__brilho" aria-hidden="true"></div>
+      <div class="container hero__conteudo">
+        <h1>Cansado de não saber o que os políticos têm feito?</h1>
+        <p class="hero__sub">
+          Instale a <strong>Aurora</strong> na sua IA preferida, de graça. Sozinha, a IA não sabe
+          o que acontece no Congresso. Com a Aurora, ela passa a ter os dados oficiais
+          da Câmara e do Senado para te responder.
+        </p>
+        <div class="hero__acoes">
+          <span class="com-dica">
+            <a class="botao botao--primario" href="#instalar" aria-describedby="dica-compat">Conectar na minha IA</a>
+            <span class="dica" role="tooltip" id="dica-compat">Funciona com Claude, ChatGPT, Gemini CLI, VS Code, Cursor e outras.</span>
+          </span>
+          <a class="botao botao--fantasma" href="#perguntas">Ver o que dá pra perguntar</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exemplos de perguntas -->
+    <section class="secao" id="perguntas">
+      <div class="container">
+        <h2 class="secao__titulo">Pergunte do seu jeito</h2>
+        <p class="secao__sub">Toque numa pergunta para copiar e colar na sua IA.</p>
+        <ul class="perguntas" role="list">
+          <li><button type="button" class="pergunta">O deputado Fulano de Tal tem votado a favor das bets?</button></li>
+          <li><button type="button" class="pergunta">O que o deputado Fulano de Tal já falou no plenário sobre educação? <span class="etiqueta">em breve</span></button></li>
+          <li><button type="button" class="pergunta">Meu candidato já propôs alguma coisa sobre segurança pública?</button></li>
+          <li><button type="button" class="pergunta">Quais senadores votaram contra o marco temporal?</button></li>
+          <li><button type="button" class="pergunta">Existe algum projeto que proíba celular nas escolas? O que ele diz?</button></li>
+          <li><button type="button" class="pergunta">O que o presidente vetou na lei do saneamento básico?</button></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Instalação -->
+    <section class="secao secao--instalar" id="instalar">
+      <div class="container">
+        <h2 class="secao__titulo secao__titulo--sozinho">Instale em um minuto</h2>
+
+        <div class="clientes">
+          <div class="clientes__trilho" role="tablist" aria-label="Escolha sua IA" id="abas"></div>
+        </div>
+
+        <div class="painel" role="tabpanel" id="painel" tabindex="0" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Números -->
+    <section class="secao">
+      <div class="container">
+        <h2 class="secao__titulo">Dados oficiais, não opinião</h2>
+        <p class="secao__sub">
+          A Aurora não dá nota nem ranqueia ninguém. Ela entrega o registro público,
+          e a IA responde a partir dele, e não da memória do modelo.
+        </p>
+        <dl class="numeros">
+          <div><dt>votos nominais</dt><dd>1,3 mi</dd></div>
+          <div><dt>proposições</dt><dd>429 mil</dd></div>
+          <div><dt>trechos de lei indexados</dt><dd>741 mil</dd></div>
+          <div><dt>de cobertura</dt><dd>2018–2026</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Dúvidas -->
+    <section class="secao" id="duvidas">
+      <div class="container container--estreito">
+        <h2 class="secao__titulo">Dúvidas</h2>
+        <details>
+          <summary>O que é isso, exatamente?</summary>
+          <p>
+            A Aurora é um servidor <abbr title="Model Context Protocol">MCP</abbr>, o protocolo aberto que
+            permite a uma IA usar ferramentas externas. Você continua conversando com a IA de sempre;
+            ela é que passa a consultar a Aurora quando a pergunta é sobre o Congresso.
+          </p>
+          <p>
+            Não é só um banco de dados exposto. Mais de 740 mil trechos do texto integral das proposições
+            estão indexados numa busca <strong>RAG híbrida</strong>, que combina busca semântica (embeddings)
+            com busca por palavra-chave. Por isso uma pergunta sobre “apostas esportivas” encontra o projeto
+            que fala em “loteria de quota fixa”, mesmo sem nenhuma palavra em comum.
+          </p>
+          <p>
+            Em cima disso há ferramentas pensadas para perguntas reais (votos por tema, posição consolidada
+            de um parlamentar, placar de uma votação, autoria, relatoria, vetos), com regras que evitam
+            erros comuns: separar a votação do texto principal da votação de um destaque e nunca tratar
+            ausência como voto.
+          </p>
+        </details>
+        <details>
+          <summary>Dá pra ver o que os políticos falaram?</summary>
+          <p>
+            Em breve. Estamos integrando os discursos da Câmara, e as respostas vão poder trazer trechos
+            das falas dos deputados em plenário, lado a lado com como eles votaram.
+          </p>
+        </details>
+        <details>
+          <summary>É gratuito?</summary>
+          <p>Sim. Existe um limite diário de consultas por pessoa para manter o serviço no ar para todo mundo.</p>
+        </details>
+        <details>
+          <summary>Por que preciso entrar com o Google?</summary>
+          <p>
+            Só para identificar quem está usando e aplicar o limite diário. A Aurora não acessa seus e-mails,
+            arquivos nem contatos. Veja a <a href="privacidade.html">política de privacidade</a>.
+          </p>
+        </details>
+        <details>
+          <summary>De onde vêm os dados?</summary>
+          <p>
+            Das bases abertas oficiais da Câmara dos Deputados e do Senado Federal, atualizadas periodicamente.
+          </p>
+        </details>
+        <details>
+          <summary>Você ganha algo com isso?</summary>
+          <p>
+            Dinheiro, não. A Aurora é o meu TCC, e levar informação de qualidade para mais gente
+            já é a melhor recompensa.
+          </p>
+        </details>
+        <details>
+          <summary>A Aurora é open source?</summary>
+          <p>
+            Sim! Sou a favor de código aberto, e contribuições são muito bem-vindas.
+            O código está no <a href="https://github.com/henriporto/aurora">GitHub</a>.
+          </p>
+        </details>
+        <details>
+          <summary>A Aurora tem lado?</summary>
+          <p>
+            Não. Ela é instruída a não rotular partidos nem parlamentares e a tratar ausência de dado como
+            ausência, nunca como posição. Toda afirmação sobre voto precisa vir de uma consulta aos dados.
+          </p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__linha">
+      <p>Feito por <a class="autor" href="https://www.linkedin.com/in/henriporto/">Henrique Porto</a>, estudante de Ciência da Computação.</p>
+      <nav aria-label="Rodapé">
+        <a href="https://github.com/henriporto/aurora">Código no GitHub</a>
+        <a href="privacidade.html">Privacidade</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="aviso" role="status" aria-live="polite" id="aviso"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
