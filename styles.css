@@ -51,6 +51,11 @@
   }
 }
 
+/* Fontes servidas pelo próprio site: nenhuma requisição a terceiros. */
+@font-face { font-family: "Fraunces"; src: url("fontes/fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("fontes/inter.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("fontes/jetbrains-mono.woff2") format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -114,7 +119,7 @@ h1, h2, h3 {
 }
 
 /* Hero */
-.hero { position: relative; padding: 96px 0 72px; overflow: hidden; }
+.hero { position: relative; overflow: hidden; }
 .hero__brilho {
   position: absolute; inset: -30% -10% auto; height: 520px;
   background:
@@ -165,7 +170,26 @@ h1, h2, h3 {
 .botao--acento:hover { background: var(--acento-hover); color: var(--sobre-acento); }
 
 /* Seções */
-.secao { padding: 72px 0; }
+.secao { padding: 120px 0; scroll-margin-top: 60px; }
+
+/* Blocos de tela cheia: início, perguntas e instalação. A seta leva ao próximo. */
+.bloco {
+  position: relative; min-height: calc(100svh - 60px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 72px 0 112px; scroll-margin-top: 60px;
+}
+.bloco--ultimo { padding-bottom: 72px; }
+.proximo {
+  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+  color: var(--tinta-2); background: color-mix(in srgb, var(--superficie) 70%, transparent);
+  border: 1px solid var(--linha);
+  transition: color .15s, border-color .15s, background-color .15s;
+  animation: flutuar 2.4s ease-in-out infinite;
+}
+.proximo:hover { color: var(--tinta); border-color: var(--tinta-3); background: var(--superficie); }
+.proximo svg { width: 20px; height: 20px; }
+@keyframes flutuar { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
 .secao__titulo { font-size: clamp(1.8rem, 4vw, 2.5rem); text-align: center; text-wrap: balance; }
 .secao__titulo--sozinho { margin-bottom: 32px; }
 .secao__sub { margin: 12px auto 36px; max-width: 580px; text-align: center; color: var(--tinta-2); text-wrap: pretty; }
@@ -176,19 +200,29 @@ h1, h2, h3 {
   display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
 }
 .pergunta {
-  width: 100%; height: 100%; text-align: left; cursor: pointer;
-  padding: 18px 20px; border-radius: var(--raio);
-  font: 400 1rem/1.5 var(--fonte-texto); color: var(--tinta);
+  position: relative; display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+  padding: 16px 12px 16px 20px; border-radius: var(--raio);
   background: var(--superficie); border: 1px solid var(--linha);
   transition: border-color .15s, box-shadow .15s, transform .15s;
 }
-.pergunta::before { content: "“"; color: var(--acento); font-family: var(--fonte-titulo); font-size: 1.4em; line-height: 0; margin-right: 2px; vertical-align: -0.2em; }
-.etiqueta {
-  display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; vertical-align: 1px;
-  font-size: .72rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
-  color: var(--acento); background: var(--acento-suave);
-}
 .pergunta:hover { border-color: color-mix(in srgb, var(--acento) 45%, var(--linha)); box-shadow: var(--sombra); transform: translateY(-1px); }
+.pergunta__texto { flex: 1; margin: 2px 0 0; font-size: 1rem; line-height: 1.9; color: var(--tinta); }
+.pergunta__texto::before { content: "“"; color: var(--acento); font-family: var(--fonte-titulo); font-size: 1.4em; line-height: 0; margin-right: 2px; vertical-align: -0.2em; }
+.lacuna {
+  width: 7ch; min-width: 5ch; max-width: 100%; padding: 1px 6px; margin: 0 1px;
+  font: 500 1rem/1.4 var(--fonte-texto); color: var(--acento);
+  background: var(--acento-suave); border: 0; border-bottom: 1.5px dashed var(--acento); border-radius: 6px 6px 2px 2px;
+  cursor: text;
+}
+.lacuna::placeholder { color: color-mix(in srgb, var(--acento) 55%, transparent); font-weight: 400; }
+.lacuna:focus { outline: none; border-bottom-style: solid; }
+.pergunta__copiar {
+  flex: 0 0 auto; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; cursor: pointer;
+  color: var(--tinta-3); background: transparent; border: 0;
+  transition: color .15s, background-color .15s;
+}
+.pergunta__copiar svg { width: 16px; height: 16px; }
+.pergunta:hover .pergunta__copiar { color: var(--acento); background: var(--acento-suave); }
 
 /* Instalação */
 .secao--instalar { background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--acento-suave) 55%, transparent) 30%, transparent); }
@@ -294,6 +328,13 @@ details p + p { margin-top: -8px; }
 details strong { color: var(--tinta); font-weight: 600; }
 abbr { text-decoration: underline dotted; text-underline-offset: 3px; }
 
+/* Botão com cara de link */
+.link {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: var(--acento); text-decoration: underline; text-underline-offset: 3px;
+}
+.link:hover { color: var(--acento-hover); }
+
 /* Rodapé */
 .rodape { border-top: 1px solid var(--linha); padding: 32px 0 44px; margin-top: 24px; }
 .rodape__linha { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
@@ -301,8 +342,8 @@ abbr { text-decoration: underline dotted; text-underline-offset: 3px; }
 .rodape .autor { color: var(--tinta); font-weight: 600; text-decoration: none; }
 .rodape .autor:hover { color: var(--acento); text-decoration: underline; }
 .rodape nav { display: flex; gap: 20px; }
-.rodape nav a { color: var(--tinta-2); font-size: .95rem; }
-.rodape nav a:hover { color: var(--tinta); }
+.rodape nav a, .rodape nav .link { color: var(--tinta-2); font-size: .95rem; }
+.rodape nav a:hover, .rodape nav .link:hover { color: var(--tinta); }
 
 /* Aviso "copiado" */
 .aviso {
@@ -313,6 +354,28 @@ abbr { text-decoration: underline dotted; text-underline-offset: 3px; }
   box-shadow: var(--sombra); transition: opacity .2s, transform .2s;
 }
 .aviso.visivel { opacity: 1; transform: translate(-50%, 0); }
+
+/* Caixa de privacidade */
+.caixa {
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow: auto;
+  padding: 26px 26px 22px; border: 1px solid var(--linha); border-radius: var(--raio-g);
+  background: var(--superficie); color: var(--tinta); box-shadow: 0 24px 60px rgb(0 0 0 / .25);
+}
+.caixa::backdrop { background: rgb(14 15 19 / .45); backdrop-filter: blur(3px); }
+.caixa[open] { animation: entrar .22s ease-out; }
+.caixa__cabeca { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.caixa h2 { font-size: 1.6rem; }
+.caixa__fechar {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+  color: var(--tinta-2); background: transparent; border: 1px solid var(--linha);
+}
+.caixa__fechar:hover { color: var(--tinta); border-color: var(--tinta-3); }
+.caixa__fechar svg { width: 16px; height: 16px; }
+.caixa__lista { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.caixa__lista li { position: relative; padding-left: 20px; color: var(--tinta-2); font-size: .98rem; line-height: 1.55; }
+.caixa__lista li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--acento); }
+.caixa__lista strong { color: var(--tinta); font-weight: 600; }
+.caixa__rodape { margin: 20px 0 0; padding-top: 14px; border-top: 1px solid var(--linha); font-size: .9rem; }
 
 /* Página de texto (privacidade) */
 .texto { padding: 56px 0 24px; }

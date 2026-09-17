@@ -192,7 +192,6 @@ function selecionar(id, { focar = false, rolar = true } = {}) {
     }
   });
   renderizarPainel(cliente);
-  try { localStorage.setItem("aurora-cliente", cliente.id); } catch {}
 }
 
 abas.innerHTML = CLIENTES.map(
@@ -232,17 +231,45 @@ abas.addEventListener("keydown", (e) => {
   selecionar(ids[(destino + ids.length) % ids.length], { focar: true });
 });
 
-let inicial = CLIENTES[0].id;
-try { inicial = localStorage.getItem("aurora-cliente") || inicial; } catch {}
-selecionar(inicial, { rolar: false });
+selecionar(CLIENTES[0].id, { rolar: false });
 atualizarBordas();
 
-// Perguntas de exemplo: tocar copia.
-document.querySelectorAll(".pergunta").forEach((botao) => {
-  botao.addEventListener("click", async () => {
-    const pergunta = botao.cloneNode(true);
-    pergunta.querySelectorAll(".etiqueta").forEach((e) => e.remove());
-    await copiar(pergunta.textContent.trim());
+// Perguntas de exemplo: a pessoa preenche o nome e toca no card para copiar.
+function ajustarLacuna(campo) {
+  const tamanho = Math.max(campo.value.length, campo.placeholder.length) + 1;
+  campo.style.width = `${tamanho}ch`;
+}
+
+document.querySelectorAll(".pergunta").forEach((card) => {
+  const lacunas = [...card.querySelectorAll(".lacuna")];
+  lacunas.forEach((campo) => {
+    ajustarLacuna(campo);
+    campo.addEventListener("input", () => ajustarLacuna(campo));
+    campo.addEventListener("keydown", (e) => { if (e.key === "Enter") card.click(); });
+  });
+
+  card.addEventListener("click", async (e) => {
+    if (e.target.closest(".lacuna")) return;
+    const vazia = lacunas.find((campo) => !campo.value.trim());
+    if (vazia) {
+      vazia.focus();
+      mostrarAviso("Escreva o nome antes de copiar");
+      return;
+    }
+    const texto = [...card.querySelector(".pergunta__texto").childNodes]
+      .map((no) => (no.classList?.contains("lacuna") ? no.value.trim() : no.textContent))
+      .join("")
+      .replace(/\s+/g, " ")
+      .trim();
+    await copiar(texto);
     mostrarAviso("Pergunta copiada");
   });
 });
+
+// Caixa de privacidade.
+const caixa = document.getElementById("privacidade");
+document.querySelectorAll('[data-abrir="privacidade"]').forEach((botao) =>
+  botao.addEventListener("click", () => caixa.showModal())
+);
+caixa.querySelector("[data-fechar]").addEventListener("click", () => caixa.close());
+caixa.addEventListener("click", (e) => { if (e.target === caixa) caixa.close(); });

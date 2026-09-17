@@ -15,9 +15,8 @@
   <meta property="og:locale" content="pt_BR">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" href="fontes/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -39,7 +38,7 @@
 
   <main>
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero bloco" id="inicio">
       <div class="hero__brilho" aria-hidden="true"></div>
       <div class="container hero__conteudo">
         <h1>Cansado de não saber o que os políticos têm feito?</h1>
@@ -56,26 +55,46 @@
           <a class="botao botao--fantasma" href="#perguntas">Ver o que dá pra perguntar</a>
         </div>
       </div>
+      <a class="proximo" href="#perguntas" aria-label="Ir para os exemplos de perguntas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
 
     <!-- Exemplos de perguntas -->
-    <section class="secao" id="perguntas">
+    <section class="secao bloco" id="perguntas">
       <div class="container">
         <h2 class="secao__titulo">Pergunte do seu jeito</h2>
-        <p class="secao__sub">Toque numa pergunta para copiar e colar na sua IA.</p>
+        <p class="secao__sub">Preencha o nome, toque para copiar e cole na sua IA.</p>
         <ul class="perguntas" role="list">
-          <li><button type="button" class="pergunta">O deputado Fulano de Tal tem votado a favor das bets?</button></li>
-          <li><button type="button" class="pergunta">O que o deputado Fulano de Tal já falou no plenário sobre educação? <span class="etiqueta">em breve</span></button></li>
-          <li><button type="button" class="pergunta">Meu candidato já propôs alguma coisa sobre segurança pública?</button></li>
-          <li><button type="button" class="pergunta">Quais senadores votaram contra o marco temporal?</button></li>
-          <li><button type="button" class="pergunta">Existe algum projeto que proíba celular nas escolas? O que ele diz?</button></li>
-          <li><button type="button" class="pergunta">O que o presidente vetou na lei do saneamento básico?</button></li>
+          <li class="pergunta">
+            <p class="pergunta__texto">O deputado <input class="lacuna" type="text" placeholder="nome" aria-label="Nome do deputado" autocomplete="off" spellcheck="false"> tem votado a favor das bets?</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
+          <li class="pergunta">
+            <p class="pergunta__texto">Cite discursos, projetos e votos do senador <input class="lacuna" type="text" placeholder="nome" aria-label="Nome do senador" autocomplete="off" spellcheck="false"> sobre armas.</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
+          <li class="pergunta">
+            <p class="pergunta__texto">Meu candidato já propôs alguma coisa sobre segurança pública?</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
+          <li class="pergunta">
+            <p class="pergunta__texto">Quais senadores votaram contra o marco temporal?</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
+          <li class="pergunta">
+            <p class="pergunta__texto">Existe algum projeto que proíba celular nas escolas? O que ele diz?</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
+          <li class="pergunta">
+            <p class="pergunta__texto">O que o presidente vetou na lei do saneamento básico?</p>
+            <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+          </li>
         </ul>
       </div>
+      <a class="proximo" href="#instalar" aria-label="Ir para a instalação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
 
     <!-- Instalação -->
-    <section class="secao secao--instalar" id="instalar">
+    <section class="secao secao--instalar bloco" id="instalar">
       <div class="container">
         <h2 class="secao__titulo secao__titulo--sozinho">Instale em um minuto</h2>
 
@@ -85,10 +104,11 @@
 
         <div class="painel" role="tabpanel" id="painel" tabindex="0" aria-live="polite"></div>
       </div>
+      <a class="proximo" href="#dados" aria-label="Ir para os dados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
 
     <!-- Números -->
-    <section class="secao">
+    <section class="secao bloco" id="dados">
       <div class="container">
         <h2 class="secao__titulo">Dados oficiais, não opinião</h2>
         <p class="secao__sub">
@@ -102,10 +122,11 @@
           <div><dt>de cobertura</dt><dd>2018–2026</dd></div>
         </dl>
       </div>
+      <a class="proximo" href="#duvidas" aria-label="Ir para as dúvidas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
 
     <!-- Dúvidas -->
-    <section class="secao" id="duvidas">
+    <section class="secao bloco bloco--ultimo" id="duvidas">
       <div class="container container--estreito">
         <h2 class="secao__titulo">Dúvidas</h2>
         <details>
@@ -131,8 +152,8 @@
         <details>
           <summary>Dá pra ver o que os políticos falaram?</summary>
           <p>
-            Em breve. Estamos integrando os discursos da Câmara, e as respostas vão poder trazer trechos
-            das falas dos deputados em plenário, lado a lado com como eles votaram.
+            Sim! Os discursos da Câmara estão integrados ao nosso RAG, ou seja, sua IA tem acesso
+            ao que os deputados dizem, votam e propõem, tudo na mesma resposta.
           </p>
         </details>
         <details>
@@ -143,7 +164,7 @@
           <summary>Por que preciso entrar com o Google?</summary>
           <p>
             Só para identificar quem está usando e aplicar o limite diário. A Aurora não acessa seus e-mails,
-            arquivos nem contatos. Veja a <a href="privacidade.html">política de privacidade</a>.
+            arquivos nem contatos. Veja os <button type="button" class="link" data-abrir="privacidade">detalhes de privacidade</button>.
           </p>
         </details>
         <details>
@@ -182,10 +203,27 @@
       <p>Feito por <a class="autor" href="https://www.linkedin.com/in/henriporto/">Henrique Porto</a>, estudante de Ciência da Computação.</p>
       <nav aria-label="Rodapé">
         <a href="https://github.com/henriporto/aurora">Código no GitHub</a>
-        <a href="privacidade.html">Privacidade</a>
+        <button type="button" class="link" data-abrir="privacidade">Privacidade</button>
       </nav>
     </div>
   </footer>
+
+  <dialog class="caixa" id="privacidade" aria-labelledby="privacidade-titulo">
+    <div class="caixa__cabeca">
+      <h2 id="privacidade-titulo">Privacidade</h2>
+      <button type="button" class="caixa__fechar" data-fechar aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <ul class="caixa__lista">
+      <li><strong>Este site não usa cookies</strong>, analytics nem rastreadores. Nem as fontes vêm de terceiros. Por isso não há aquele aviso de cookies.</li>
+      <li><strong>Ao conectar a Aurora</strong>, recebemos do Google só seu nome e e-mail. Nada de e-mails, arquivos ou contatos.</li>
+      <li><strong>A Aurora não vê sua conversa com a IA.</strong> Registramos apenas as consultas que a IA faz ao servidor (ex.: o nome de um parlamentar ou um tema), para aplicar o limite diário e melhorar a ferramenta.</li>
+      <li><strong>Não vendemos nem compartilhamos</strong> seus dados com ninguém.</li>
+      <li><strong>LGPD:</strong> você pode pedir acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail <a href="mailto:[email-de-contato]">[email-de-contato]</a>.</li>
+    </ul>
+    <p class="caixa__rodape"><a href="privacidade.html">Política de privacidade completa</a></p>
+  </dialog>
 
   <div class="aviso" role="status" aria-live="polite" id="aviso"></div>
 
