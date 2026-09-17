@@ -237,7 +237,8 @@ atualizarBordas();
 // Perguntas de exemplo: a pessoa preenche o nome e toca no card para copiar.
 function ajustarLacuna(campo) {
   const tamanho = Math.max(campo.value.length, campo.placeholder.length) + 1;
-  campo.style.width = `${tamanho}ch`;
+  // + padding lateral do campo (6px de cada lado), senão a última letra é cortada.
+  campo.style.width = `calc(${tamanho}ch + 5px)`;
 }
 
 document.querySelectorAll(".pergunta").forEach((card) => {
@@ -273,3 +274,152 @@ document.querySelectorAll('[data-abrir="privacidade"]').forEach((botao) =>
 );
 caixa.querySelector("[data-fechar]").addEventListener("click", () => caixa.close());
 caixa.addEventListener("click", (e) => { if (e.target === caixa) caixa.close(); });
+
+// Seta "próximo": só aparece quando o fim do bloco está no rodapé da tela,
+// ou seja, com o bloco encaixado. Ao rolar para fora dele, ela some.
+const setas = [...document.querySelectorAll(".proximo")];
+function atualizarSetas() {
+  const altura = window.innerHeight;
+  setas.forEach((seta) => {
+    const fim = seta.parentElement.getBoundingClientRect().bottom;
+    seta.classList.toggle("visivel", fim >= altura - 120 && fim <= altura + 48);
+  });
+}
+let quadroSetas = 0;
+const agendarSetas = () => {
+  cancelAnimationFrame(quadroSetas);
+  quadroSetas = requestAnimationFrame(atualizarSetas);
+};
+window.addEventListener("scroll", agendarSetas, { passive: true });
+window.addEventListener("resize", agendarSetas);
+atualizarSetas();
+
+// Rolagem por bloco no computador: uma rolada leva ao bloco seguinte, com animação suave.
+// Blocos mais altos que a tela rolam normalmente até o fim antes de pular.
+const ALTURA_TOPO = 60;
+const blocos = [...document.querySelectorAll(".bloco")];
+const semAnimacao = window.matchMedia("(prefers-reduced-motion: reduce)");
+const ponteiroFino = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+const posicaoDo = (bloco) => Math.max(0, Math.round(bloco.getBoundingClientRect().top + scrollY - ALTURA_TOPO));
+
+function indiceAtual() {
+  let atual = 0;
+  blocos.forEach((bloco, i) => { if (posicaoDo(bloco) <= scrollY + 8) atual = i; });
+  return atual;
+}
+
+let animando = false;
+let travadoAte = 0;
+let ultimaRoda = 0;
+
+function rolarPara(destino) {
+  destino = Math.min(destino, document.documentElement.scrollHeight - innerHeight);
+  if (semAnimacao.matches) {
+    window.scrollTo({ top: destino, behavior: "instant" });
+    return;
+  }
+  const inicio = scrollY;
+  const distancia = destino - inicio;
+  const duracao = Math.min(900, 450 + Math.abs(distancia) * 0.35);
+  const t0 = performance.now();
+  const suavizar = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  animando = true;
+  travadoAte = t0 + duracao + 250;
+  function passo(agora) {
+    const t = Math.min(1, (agora - t0) / duracao);
+    window.scrollTo({ top: inicio + distancia * suavizar(t), behavior: "instant" });
+    if (t < 1) requestAnimationFrame(passo);
+    else animando = false;
+  }
+  requestAnimationFrame(passo);
+}
+
+function navegar(direcao, e) {
+  const i = indiceAtual();
+  const bloco = blocos[i];
+  const topo = posicaoDo(bloco);
+  const fimDoBloco = topo + ALTURA_TOPO + bloco.offsetHeight;
+
+  if (direcao > 0) {
+    if (fimDoBloco > scrollY + innerHeight + 2) return false; // ainda há conteúdo no bloco
+    if (i === blocos.length - 1) return false; // último bloco: segue até o rodapé
+    e.preventDefault();
+    rolarPara(posicaoDo(blocos[i + 1]));
+  } else {
+    const cabeNaTela = bloco.offsetHeight + ALTURA_TOPO <= innerHeight + 2;
+    if (scrollY > topo + 2) {
+      // Fora do topo do bloco atual (ou no rodapé): encaixa nele se couber; se for alto, rola normal.
+      if (!cabeNaTela) return false;
+      e.preventDefault();
+      rolarPara(topo);
+      return true;
+    }
+    if (i === 0) return false;
+    e.preventDefault();
+    const anterior = blocos[i - 1];
+    const altoDemais = anterior.offsetHeight + ALTURA_TOPO > innerHeight + 2;
+    // Voltando para um bloco alto, cai no fim dele para a leitura continuar de onde parou.
+    rolarPara(altoDemais ? posicaoDo(anterior) + anterior.offsetHeight + ALTURA_TOPO - innerHeight : posicaoDo(anterior));
+  }
+  return true;
+}
+
+window.addEventListener("wheel", (e) => {
+  if (!ponteiroFino.matches || e.defaultPrevented || e.ctrlKey || document.querySelector("dialog[open]")) return;
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+
+  const agora = performance.now();
+  const desdeUltima = agora - ultimaRoda;
+  ultimaRoda = agora;
+
+  // Durante a animação e enquanto durar a inércia do trackpad, ignora a roda.
+  if (animando || agora < travadoAte) {
+    e.preventDefault();
+    if (!animando && desdeUltima < 120) travadoAte = agora + 120;
+    return;
+  }
+  if (Math.abs(e.deltaY) < 4) return;
+  navegar(Math.sign(e.deltaY), e);
+}, { passive: false });
+
+window.addEventListener("keydown", (e) => {
+  if (!ponteiroFino.matches || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (document.querySelector("dialog[open]") || e.target.closest("input, textarea, select, [role=tab], summary, button")) return;
+  const direcao = { PageDown: 1, ArrowDown: 1, " ": e.shiftKey ? -1 : 1, PageUp: -1, ArrowUp: -1 }[e.key];
+  if (!direcao) return;
+  if (animando) { e.preventDefault(); return; }
+  navegar(direcao, e);
+});
+
+// Links internos (setas, menu, botões do topo) usam a mesma animação.
+document.addEventListener("click", (e) => {
+  const link = e.target.closest('a[href^="#"]');
+  if (!link || link.getAttribute("href").length < 2) return;
+  const alvo = document.querySelector(link.getAttribute("href"));
+  if (!alvo) return;
+  e.preventDefault();
+  rolarPara(posicaoDo(alvo));
+  history.replaceState(null, "", link.getAttribute("href"));
+});
+
+// Aurora do topo acompanha o mouse, com atraso suave (a transição fica no CSS).
+const aurora = document.querySelector(".aurora");
+if (aurora && ponteiroFino.matches && !semAnimacao.matches) {
+  let quadroAurora = 0;
+  window.addEventListener("pointermove", (e) => {
+    cancelAnimationFrame(quadroAurora);
+    quadroAurora = requestAnimationFrame(() => {
+      aurora.style.setProperty("--mx", ((e.clientX / innerWidth) * 2 - 1).toFixed(3));
+      aurora.style.setProperty("--my", ((e.clientY / innerHeight) * 2 - 1).toFixed(3));
+    });
+  }, { passive: true });
+}
+
+// Altura do rodapé, para o último bloco dividir a tela com ele.
+const rodape = document.querySelector(".rodape");
+function medirRodape() {
+  document.documentElement.style.setProperty("--altura-rodape", `${rodape.offsetHeight}px`);
+}
+window.addEventListener("resize", medirRodape);
+medirRodape();

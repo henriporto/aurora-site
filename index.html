@@ -14,7 +14,8 @@
   <meta property="og:description" content="Dados oficiais da Câmara e do Senado dentro da sua IA preferida.">
   <meta property="og:locale" content="pt_BR">
 
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="lobo.png" type="image/png">
+  <link rel="apple-touch-icon" href="lobo.png">
   <link rel="preload" href="fontes/fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
@@ -22,15 +23,21 @@
 <body>
   <a class="pular" href="#instalar">Pular para a instalação</a>
 
+  <!-- Fundo de aurora da página inteira: fixo atrás de todos os blocos. -->
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__faixa aurora__faixa--verde"></span>
+    <span class="aurora__faixa aurora__faixa--azul"></span>
+  </div>
+
   <header class="topo">
     <div class="container topo__linha">
       <a class="marca" href="./" aria-label="Aurora, página inicial">
-        <img src="favicon.svg" alt="" width="28" height="28">
+        <img src="lobo.png" alt="" width="30" height="30">
         <span>Aurora</span>
       </a>
       <nav class="topo__nav" aria-label="Principal">
-        <a href="#perguntas">Exemplos</a>
         <a href="#instalar">Instalar</a>
+        <a href="#perguntas">Exemplos</a>
         <a href="#duvidas">Dúvidas</a>
       </nav>
     </div>
@@ -39,7 +46,6 @@
   <main>
     <!-- Hero -->
     <section class="hero bloco" id="inicio">
-      <div class="hero__brilho" aria-hidden="true"></div>
       <div class="container hero__conteudo">
         <h1>Cansado de não saber o que os políticos têm feito?</h1>
         <p class="hero__sub">
@@ -54,6 +60,20 @@
           </span>
           <a class="botao botao--fantasma" href="#perguntas">Ver o que dá pra perguntar</a>
         </div>
+      </div>
+      <a class="proximo" href="#instalar" aria-label="Ir para a instalação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    </section>
+
+    <!-- Instalação -->
+    <section class="secao secao--instalar bloco" id="instalar">
+      <div class="container">
+        <h2 class="secao__titulo secao__titulo--sozinho">Instale em um minuto</h2>
+
+        <div class="clientes">
+          <div class="clientes__trilho" role="tablist" aria-label="Escolha sua IA" id="abas"></div>
+        </div>
+
+        <div class="painel" role="tabpanel" id="painel" tabindex="0" aria-live="polite"></div>
       </div>
       <a class="proximo" href="#perguntas" aria-label="Ir para os exemplos de perguntas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
@@ -89,20 +109,6 @@
             <button type="button" class="pergunta__copiar" aria-label="Copiar pergunta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
           </li>
         </ul>
-      </div>
-      <a class="proximo" href="#instalar" aria-label="Ir para a instalação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
-    </section>
-
-    <!-- Instalação -->
-    <section class="secao secao--instalar bloco" id="instalar">
-      <div class="container">
-        <h2 class="secao__titulo secao__titulo--sozinho">Instale em um minuto</h2>
-
-        <div class="clientes">
-          <div class="clientes__trilho" role="tablist" aria-label="Escolha sua IA" id="abas"></div>
-        </div>
-
-        <div class="painel" role="tabpanel" id="painel" tabindex="0" aria-live="polite"></div>
       </div>
       <a class="proximo" href="#dados" aria-label="Ir para os dados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
     </section>
@@ -220,7 +226,7 @@
       <li><strong>Ao conectar a Aurora</strong>, recebemos do Google só seu nome e e-mail. Nada de e-mails, arquivos ou contatos.</li>
       <li><strong>A Aurora não vê sua conversa com a IA.</strong> Registramos apenas as consultas que a IA faz ao servidor (ex.: o nome de um parlamentar ou um tema), para aplicar o limite diário e melhorar a ferramenta.</li>
       <li><strong>Não vendemos nem compartilhamos</strong> seus dados com ninguém.</li>
-      <li><strong>LGPD:</strong> você pode pedir acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail <a href="mailto:[email-de-contato]">[email-de-contato]</a>.</li>
+      <li><strong>LGPD:</strong> você pode pedir acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail <a href="mailto:henriqueporto@id.uff.br">henriqueporto@id.uff.br</a>.</li>
     </ul>
     <p class="caixa__rodape"><a href="privacidade.html">Política de privacidade completa</a></p>
   </dialog>

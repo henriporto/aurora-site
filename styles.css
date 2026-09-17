@@ -1,8 +1,7 @@
 /* Paleta
- * Base neutra e quente (papel + tinta) com um único acento violeta.
- * Evita vermelho, verde-amarelo e azul como cor principal: no Brasil
- * essas cores lembram partidos e o site precisa parecer neutro.
- * O brilho do topo (lilás → pêssego) é o "amanhecer" da Aurora.
+ * Base neutra e quente (papel + tinta) com acento verde, que lembra o Brasil.
+ * O verde vem sozinho, sem amarelo: a dupla verde-amarelo tem leitura política.
+ * O fundo da página é uma aurora (verde e azul), fixa atrás de todos os blocos, que se move devagar e segue o mouse.
  */
 :root {
   --fundo: #FAF8F5;
@@ -11,15 +10,16 @@
   --tinta-2: #4A4F5A;
   --tinta-3: #6B707A;
   --linha: #E7E3DC;
-  --acento: #5B4BD1;
-  --acento-hover: #4A3BBE;
-  --acento-suave: #EFECFC;
+  --acento: #0A7A4F;
+  --acento-hover: #07643F;
+  --acento-suave: #E3F5EA;
   --sobre-acento: #FFFFFF;
   --codigo-fundo: #16181D;
   --codigo-tinta: #ECEAE6;
   --codigo-rotulo: #9A9FAA;
-  --brilho-1: #CFC6FA;
-  --brilho-2: #F8D2BF;
+  --aurora-verde: #d2f1df;
+  --aurora-azul: #F4F8FF;
+  --aurora-opacidade: 0.4;
 
   --fonte-titulo: "Fraunces", Georgia, "Times New Roman", serif;
   --fonte-texto: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -40,13 +40,14 @@
     --tinta-2: #B0B4BD;
     --tinta-3: #8C919B;
     --linha: #272A33;
-    --acento: #A99DFF;
-    --acento-hover: #BDB4FF;
-    --acento-suave: #221F3A;
+    --acento: #5FD39A;
+    --acento-hover: #83E0B2;
+    --acento-suave: #12291E;
     --sobre-acento: #0E0F13;
     --codigo-fundo: #0A0B0E;
-    --brilho-1: #3A2F7A;
-    --brilho-2: #5A3226;
+    --aurora-verde: #0D3B2A;
+    --aurora-azul: #16294D;
+    --aurora-opacidade: .18;
     --sombra: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .25);
   }
 }
@@ -58,7 +59,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 60px; }
+/* Telas de toque: encaixe nativo, cada deslizada leva a um bloco.
+ * No computador quem faz isso é o script.js (rolagem por bloco). */
+@media (hover: none) and (pointer: coarse) {
+  html { scroll-snap-type: y mandatory; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -110,7 +116,7 @@ h1, h2, h3 {
   color: var(--tinta); text-decoration: none;
   font-family: var(--fonte-titulo); font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em;
 }
-.marca img { border-radius: 8px; }
+.marca img { display: block; }
 .topo__nav { display: flex; gap: 22px; }
 .topo__nav a { color: var(--tinta-2); text-decoration: none; font-size: .95rem; font-weight: 500; }
 .topo__nav a:hover { color: var(--tinta); }
@@ -120,16 +126,47 @@ h1, h2, h3 {
 
 /* Hero */
 .hero { position: relative; overflow: hidden; }
-.hero__brilho {
-  position: absolute; inset: -30% -10% auto; height: 520px;
-  background:
-    radial-gradient(40% 60% at 30% 40%, var(--brilho-1), transparent 70%),
-    radial-gradient(35% 55% at 70% 50%, var(--brilho-2), transparent 70%);
-  filter: blur(40px);
-  opacity: .75;
-  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
-  mask-image: linear-gradient(to bottom, #000 45%, transparent);
-  pointer-events: none;
+.aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+/* Ruído bem fino por cima: degradês fracos em áreas grandes criam anéis visíveis (banding). */
+.aurora::after {
+  content: ""; position: absolute; inset: 0; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23r)'/%3E%3C/svg%3E");
+}
+.aurora__faixa {
+  position: absolute; border-radius: 50%;
+  filter: blur(90px); opacity: var(--aurora-opacidade);
+  will-change: transform, translate;
+  /* Deslocamento pelo mouse (--mx e --my vão de -1 a 1, definidos no script). */
+  translate: calc(var(--mx, 0) * var(--forca) * 1px) calc(var(--my, 0) * var(--forca) * 1px);
+  transition: translate .8s cubic-bezier(.2, .7, .2, 1);
+}
+/* Cada faixa ocupa um lado inteiro (verde à esquerda, azul à direita), bem espalhada,
+ * e só oscila um pouco: os núcleos nunca se juntam no centro, atrás do título. */
+.aurora__faixa--verde {
+  --forca: 40; width: 80vw; height: 115vh; left: -34vw; top: -12vh;
+  background: radial-gradient(closest-side, var(--aurora-verde), color-mix(in srgb, var(--aurora-verde) 55%, transparent) 50%, transparent);
+  animation: deriva-verde 18s ease-in-out infinite alternate;
+}
+.aurora__faixa--azul {
+  --forca: 40; width: 80vw; height: 115vh; right: -34vw; top: -4vh;
+  background: radial-gradient(closest-side, var(--aurora-azul), color-mix(in srgb, var(--aurora-azul) 55%, transparent) 50%, transparent);
+  animation: deriva-azul 22s ease-in-out infinite alternate;
+}
+@keyframes deriva-verde {
+  0%   { transform: translate(0, 0) rotate(0) scale(1); }
+  50%  { transform: translate(3vw, 10vh) rotate(10deg) scale(1.1); }
+  100% { transform: translate(-2vw, 4vh) rotate(-6deg) scale(.95); }
+}
+@keyframes deriva-azul {
+  0%   { transform: translate(0, 0) rotate(0) scale(1); }
+  50%  { transform: translate(-3vw, -8vh) rotate(-10deg) scale(1.1); }
+  100% { transform: translate(2vw, 2vh) rotate(8deg) scale(.95); }
+}
+@media (max-width: 560px) {
+  .aurora__faixa { filter: blur(48px); }
+  /* No celular: verde em cima à esquerda, azul embaixo à direita. */
+  .aurora__faixa--verde { width: 130vw; height: 60vh; left: -55vw; top: -10vh; }
+  .aurora__faixa--azul { width: 130vw; height: 60vh; right: -55vw; top: 45vh; }
 }
 .hero__conteudo { position: relative; text-align: center; max-width: 820px; }
 .hero h1 { font-size: clamp(2.3rem, 6.2vw, 4.1rem); text-wrap: balance; }
@@ -176,17 +213,23 @@ h1, h2, h3 {
 .bloco {
   position: relative; min-height: calc(100svh - 60px);
   display: flex; flex-direction: column; justify-content: center;
-  padding: 72px 0 112px; scroll-margin-top: 60px;
+  padding: 56px 0 96px; scroll-margin-top: 60px;
 }
-.bloco--ultimo { padding-bottom: 72px; }
+/* Dúvidas + rodapé dividem a última tela: o rodapé aparece sem rolar a mais.
+ * --altura-rodape é medida no script.js. */
+.bloco--ultimo { padding: 24px 0 16px; min-height: calc(100svh - 60px - var(--altura-rodape, 0px)); }
+.bloco { scroll-snap-align: start; }
+.rodape { scroll-snap-align: end; }
 .proximo {
+  opacity: 0; visibility: hidden;
   position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
   display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
   color: var(--tinta-2); background: color-mix(in srgb, var(--superficie) 70%, transparent);
   border: 1px solid var(--linha);
-  transition: color .15s, border-color .15s, background-color .15s;
+  transition: color .15s, border-color .15s, background-color .15s, opacity .25s, visibility .25s;
   animation: flutuar 2.4s ease-in-out infinite;
 }
+.proximo.visivel { opacity: 1; visibility: visible; }
 .proximo:hover { color: var(--tinta); border-color: var(--tinta-3); background: var(--superficie); }
 .proximo svg { width: 20px; height: 20px; }
 @keyframes flutuar { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
@@ -225,7 +268,6 @@ h1, h2, h3 {
 .pergunta:hover .pergunta__copiar { color: var(--acento); background: var(--acento-suave); }
 
 /* Instalação */
-.secao--instalar { background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--acento-suave) 55%, transparent) 30%, transparent); }
 
 .clientes { position: relative; margin: 0 -20px; }
 .clientes::before, .clientes::after {
@@ -311,9 +353,9 @@ h1, h2, h3 {
 
 /* Dúvidas */
 details { border-bottom: 1px solid var(--linha); }
-details:first-of-type { border-top: 1px solid var(--linha); margin-top: 28px; }
+details:first-of-type { border-top: 1px solid var(--linha); margin-top: 20px; }
 summary {
-  list-style: none; cursor: pointer; padding: 20px 36px 20px 0; position: relative;
+  list-style: none; cursor: pointer; padding: 12px 36px 12px 0; position: relative;
   font-weight: 500; font-size: 1.05rem;
 }
 summary::-webkit-details-marker { display: none; }
@@ -336,7 +378,7 @@ abbr { text-decoration: underline dotted; text-underline-offset: 3px; }
 .link:hover { color: var(--acento-hover); }
 
 /* Rodapé */
-.rodape { border-top: 1px solid var(--linha); padding: 32px 0 44px; margin-top: 24px; }
+.rodape { border-top: 1px solid var(--linha); padding: 20px 0 24px; }
 .rodape__linha { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
 .rodape p { margin: 0; color: var(--tinta-2); font-size: .95rem; }
 .rodape .autor { color: var(--tinta); font-weight: 600; text-decoration: none; }

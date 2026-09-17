@@ -8,7 +8,7 @@
 | `privacidade.html` | Política de privacidade (exigida pelo Google para publicar o login OAuth) |
 | `styles.css` | Estilos, com tema claro e escuro automáticos |
 | `script.js` | Abas de instalação e botões de copiar. **A URL do MCP fica no topo (`URL_MCP`)** |
-| `favicon.svg` | Ícone |
+| `lobo.png` | Ícone (lobo-guará, fundo transparente) |
 | `CNAME` | Domínio próprio para o GitHub Pages |
 
 ## Ver localmente
