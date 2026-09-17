@@ -1,6 +1,6 @@
 # Site da Aurora
 
-Página estática de [auroravoto.com.br](https://auroravoto.com.br): HTML, CSS e JS puros, sem build.
+[Site](https://auroravoto.com.br) estático para o projeto [Aurora](https://github.com/henriporto/aurora) com HTML, CSS e JS puros, sem build.
 
 | Arquivo | O que é |
 | :--- | :--- |
