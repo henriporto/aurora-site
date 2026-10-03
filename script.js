@@ -21,12 +21,12 @@ const CLIENTES = [
     id: "chatgpt",
     nome: "ChatGPT",
     passos: [
-      "Abra <strong>Configurações</strong> → <strong>Apps e conectores</strong> → <strong>Configurações avançadas</strong> e ative o <strong>modo desenvolvedor</strong>.",
-      "Volte em <strong>Apps e conectores</strong> e clique em <strong>Criar</strong>.",
-      "Cole a URL abaixo, escolha autenticação <strong>OAuth</strong> e entre com sua conta Google.",
+      "Abra <strong>Configurações</strong> → <strong>Integrações</strong> → <strong>Plugins</strong> → <strong>Adicionar</strong> → <strong>Adicionar servidor MCP</strong>.",
+      "Dê o nome <strong>Aurora</strong>, escolha o tipo <strong>HTTP com Streaming</strong>, cole a URL abaixo e clique em <strong>Salvar</strong>. Os outros campos ficam em branco.",
+      "Em <strong>MCPs</strong>, ao lado de <strong>Aurora</strong>, clique em <strong>Autenticar</strong>, depois em <strong>Continuar</strong> e entre com sua conta Google.",
     ],
     codigos: [{ rotulo: "URL do servidor MCP", texto: URL_MCP }],
-    nota: "O modo desenvolvedor depende do seu plano do ChatGPT.",
+    nota: "Se essas opções não aparecerem no site, tente pelo app do ChatGPT no computador. A disponibilidade pode depender do seu plano.",
   },
   {
     id: "claude-code",
