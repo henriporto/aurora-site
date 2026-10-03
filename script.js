@@ -254,7 +254,7 @@ document.querySelectorAll(".pergunta").forEach((card) => {
     const vazia = lacunas.find((campo) => !campo.value.trim());
     if (vazia) {
       vazia.focus();
-      mostrarAviso("Escreva o nome antes de copiar");
+      mostrarAviso("Preencha a lacuna antes de copiar");
       return;
     }
     const texto = [...card.querySelector(".pergunta__texto").childNodes]
