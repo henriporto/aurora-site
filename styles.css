@@ -355,7 +355,6 @@ h1, h2, h3 {
   font-family: var(--fonte-texto); font-size: .7rem; font-weight: 600; line-height: 1; margin-bottom: 5px;
   letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--acento);
 }
-.numeros .periodo .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 760px) { .numeros { grid-template-columns: repeat(2, 1fr); } }
 
 /* Dúvidas */
