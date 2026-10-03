@@ -10,9 +10,9 @@ const CLIENTES = [
     id: "claude",
     nome: "claude.ai",
     passos: [
-      "No computador, abra <strong>claude.ai</strong> → <strong>Configurações</strong> → <strong>Conectores</strong>.",
-      "Clique em <strong>Adicionar conector personalizado</strong>, dê o nome <strong>Aurora</strong> e cole a URL abaixo.",
-      "Clique em <strong>Conectar</strong> e entre com sua conta Google.",
+      "Abra <strong>claude.ai</strong> → <strong>Personalizar</strong> (Customize) → <strong>Conectores</strong> e clique em <strong>Adicionar</strong>.",
+      "Dê o nome <strong>Aurora</strong>, cole a URL abaixo e clique em <strong>Adicionar</strong>. As opções de login já vêm marcadas (<em>Sign in now</em> e <em>Use Claude’s published identity</em>); deixe como estão.",
+      "Clique em <strong>Conectar</strong>, depois em <strong>Continuar</strong> e entre com sua conta Google.",
     ],
     codigos: [{ rotulo: "URL do conector", texto: URL_MCP }],
     nota: "Depois de adicionado, o conector também aparece no app do celular.",
