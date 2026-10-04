@@ -29,7 +29,7 @@ const CLIENTES = [
         nome: "Site",
         passos: [
           "Em <strong>chatgpt.com</strong>, abra <strong>Configurações</strong> (Settings) → <strong>Segurança e login</strong> (Security and login), ative o <strong>Modo desenvolvedor</strong> (Developer mode) e feche as configurações.",
-          "No menu da esquerda, clique em <strong>Plugins</strong>, depois no botão <strong>+</strong> e em <strong>Criar servidor MCP personalizado</strong> (Create custom MCP server).",
+          "No menu da esquerda, clique em <strong>Plugins</strong>, depois no botão <strong>+</strong>, em <strong>Criar servidor MCP personalizado</strong> (Create custom MCP server) e em <strong>Criar aplicativo MCP</strong> (Create MCP app).",
           "No nome, escreva <strong>Aurora Voto</strong>. Deixe <strong>URL do servidor</strong> (Server URL) selecionado, cole a URL abaixo em <strong>Conexão</strong> (Connection) e escolha a autenticação <strong>OAuth</strong>. A descrição pode ficar em branco.",
           "Marque a caixa <strong>Entendi e quero continuar</strong> (I understand and want to continue) e clique em <strong>Criar</strong> (Create).",
           "Clique em <strong>Entrar com Aurora Voto</strong> (Sign in with Aurora Voto), depois em <strong>Continuar</strong> e entre com sua conta Google.",
