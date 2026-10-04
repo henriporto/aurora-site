@@ -5,6 +5,8 @@ const NOME = "aurora";
 const json = (obj) => JSON.stringify(obj, null, 2);
 
 // Cada cliente: passos (HTML curto), blocos de código e, se houver, botão de instalação em 1 clique.
+// Quando o caminho muda conforme o lugar de uso (site, app, celular), o cliente traz `versoes`,
+// cada uma com seus próprios passos, códigos e nota.
 const CLIENTES = [
   {
     id: "claude",
@@ -19,14 +21,42 @@ const CLIENTES = [
   },
   {
     id: "chatgpt",
-    nome: "ChatGPT Desktop",
-    passos: [
-      "No <strong>app do ChatGPT para computador</strong>, abra <strong>Configurações</strong> → <strong>Integrações</strong> → <strong>Plugins</strong> → <strong>Adicionar</strong> → <strong>Adicionar servidor MCP</strong>.",
-      "Dê o nome <strong>Aurora</strong>, escolha o tipo <strong>HTTP com Streaming</strong>, cole a URL abaixo e clique em <strong>Salvar</strong>. Os outros campos ficam em branco.",
-      "Em <strong>MCPs</strong>, ao lado de <strong>Aurora</strong>, clique em <strong>Autenticar</strong>, depois em <strong>Continuar</strong> e entre com sua conta Google.",
+    nome: "ChatGPT",
+    rotuloVersoes: "Onde você usa o ChatGPT",
+    versoes: [
+      {
+        id: "site",
+        nome: "Site",
+        passos: [
+          "Em <strong>chatgpt.com</strong>, abra <strong>Configurações</strong> (Settings) → <strong>Segurança e login</strong> (Security and login), ative o <strong>Modo desenvolvedor</strong> (Developer mode) e feche as configurações.",
+          "No menu da esquerda, clique em <strong>Plugins</strong>, depois no botão <strong>+</strong> e em <strong>Criar servidor MCP personalizado</strong> (Create custom MCP server).",
+          "No nome, escreva <strong>Aurora Voto</strong>. Deixe <strong>URL do servidor</strong> (Server URL) selecionado, cole a URL abaixo em <strong>Conexão</strong> (Connection) e escolha a autenticação <strong>OAuth</strong>. A descrição pode ficar em branco.",
+          "Marque a caixa <strong>Entendi e quero continuar</strong> (I understand and want to continue) e clique em <strong>Criar</strong> (Create).",
+          "Clique em <strong>Entrar com Aurora Voto</strong> (Sign in with Aurora Voto), depois em <strong>Continuar</strong> e entre com sua conta Google.",
+        ],
+        codigos: [{ rotulo: "URL do servidor MCP", texto: URL_MCP }],
+        nota: "Os nomes entre parênteses são os que aparecem com o ChatGPT em inglês.",
+      },
+      {
+        id: "desktop",
+        nome: "App no computador",
+        passos: [
+          "No <strong>app do ChatGPT para computador</strong>, abra <strong>Configurações</strong> → <strong>Integrações</strong> → <strong>Plugins</strong> → <strong>Adicionar</strong> → <strong>Adicionar servidor MCP</strong>.",
+          "Dê o nome <strong>Aurora</strong>, escolha o tipo <strong>HTTP com Streaming</strong>, cole a URL abaixo e clique em <strong>Salvar</strong>. Os outros campos ficam em branco.",
+          "Em <strong>MCPs</strong>, ao lado de <strong>Aurora</strong>, clique em <strong>Autenticar</strong>, depois em <strong>Continuar</strong> e entre com sua conta Google.",
+        ],
+        codigos: [{ rotulo: "URL do servidor MCP", texto: URL_MCP }],
+      },
+      {
+        id: "celular",
+        nome: "Celular",
+        passos: [
+          "Pelo app do celular não dá para adicionar a Aurora. Conecte primeiro pelo <strong>site</strong> ou pelo <strong>app no computador</strong>, com a mesma conta do ChatGPT.",
+          "Depois, abra o app do ChatGPT no celular: a Aurora já aparece lá, pronta para usar.",
+        ],
+        codigos: [],
+      },
     ],
-    codigos: [{ rotulo: "URL do servidor MCP", texto: URL_MCP }],
-    nota: "Use o aplicativo instalado no computador. Pelo que testamos, o site chatgpt.com não oferece essa opção.",
   },
   {
     id: "claude-code",
@@ -138,11 +168,21 @@ function mostrarAviso(msg) {
   timerAviso = setTimeout(() => aviso.classList.remove("visivel"), 1800);
 }
 
+// Versão escolhida em cada cliente que tem `versoes` (a primeira, até a pessoa trocar).
+const versaoEscolhida = {};
+
 function renderizarPainel(cliente) {
+  const versoes = cliente.versoes ?? [];
+  const conteudo = versoes.find((v) => v.id === versaoEscolhida[cliente.id]) ?? versoes[0] ?? cliente;
+  const seletor = versoes.length
+    ? `<div class="versoes" role="group" aria-label="${escapar(cliente.rotuloVersoes ?? "Versão")}">${versoes
+        .map((v) => `<button type="button" class="versao" data-versao="${v.id}" aria-pressed="${v.id === conteudo.id}">${escapar(v.nome)}</button>`)
+        .join("")}</div>`
+    : "";
   const instalar = cliente.instalar
     ? `<a class="botao botao--acento" href="${cliente.instalar.href}">${cliente.instalar.rotulo}</a>`
     : "";
-  const codigos = cliente.codigos
+  const codigos = conteudo.codigos
     .map(
       (c, i) => `
       <div class="codigo">
@@ -156,22 +196,31 @@ function renderizarPainel(cliente) {
     .join("");
 
   painel.innerHTML = `
+    ${seletor}
     ${instalar ? `<div class="painel__instalar">${instalar}</div>` : ""}
-    <ol class="passos">${cliente.passos.map((p) => `<li><span>${p}</span></li>`).join("")}</ol>
+    <ol class="passos">${conteudo.passos.map((p) => `<li><span>${p}</span></li>`).join("")}</ol>
     ${codigos}
-    ${cliente.nota ? `<p class="painel__nota">${cliente.nota}</p>` : ""}
+    ${conteudo.nota ? `<p class="painel__nota">${conteudo.nota}</p>` : ""}
   `;
   painel.setAttribute("aria-labelledby", `aba-${cliente.id}`);
 
   painel.querySelectorAll(".copiar").forEach((botao) => {
     botao.addEventListener("click", async () => {
-      await copiar(cliente.codigos[Number(botao.dataset.indice)].texto);
+      await copiar(conteudo.codigos[Number(botao.dataset.indice)].texto);
       botao.innerHTML = `${ICONE_OK}<span>Copiado</span>`;
       botao.dataset.copiado = "";
       setTimeout(() => {
         botao.innerHTML = `${ICONE_COPIAR}<span>Copiar</span>`;
         delete botao.dataset.copiado;
       }, 1800);
+    });
+  });
+
+  painel.querySelectorAll(".versao").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      versaoEscolhida[cliente.id] = botao.dataset.versao;
+      renderizarPainel(cliente);
+      painel.querySelector('.versao[aria-pressed="true"]')?.focus();
     });
   });
 

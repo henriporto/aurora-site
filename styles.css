@@ -303,6 +303,16 @@ h1, h2, h3 {
 .painel.entrando { animation: entrar .28s ease-out; }
 @keyframes entrar { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .painel__instalar { margin-bottom: 22px; }
+.versoes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.versao {
+  display: inline-flex; align-items: center;
+  min-height: 36px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  font: 500 .9rem/1 var(--fonte-texto); color: var(--tinta-2);
+  background: transparent; border: 1px solid var(--linha);
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.versao:hover { color: var(--tinta); border-color: var(--tinta-3); }
+.versao[aria-pressed="true"] { background: var(--acento-suave); color: var(--acento); border-color: var(--acento); }
 .passos { margin: 0; padding: 0; list-style: none; counter-reset: passo; display: grid; gap: 12px; }
 .passos li { counter-increment: passo; display: grid; grid-template-columns: 28px 1fr; gap: 12px; color: var(--tinta-2); }
 .passos li::before {
